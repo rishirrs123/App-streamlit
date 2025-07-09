@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 import streamlit as st
 from datetime import timedelta
+from datetime import date
 
 
 from dotenv import load_dotenv
