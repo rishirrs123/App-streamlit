@@ -34,7 +34,8 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 print("DATABASE_URL loaded successfully.")
 
 
-
+start_time = st.date_input("Start Date", value=date(2025, 07, 08))
+end_time = st.date_input("End Date", value=date(2025, 07, 09))
 @st.cache_data(show_spinner=False)
 def get_unique_segments(start_time, end_time):
     engine = create_engine("postgresql://user:pass@host:5432/db")
