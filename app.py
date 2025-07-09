@@ -39,11 +39,19 @@ print("DATABASE_URL loaded successfully.")
 start_time = st.date_input("Start Date", value=date(2024, 1, 1))
 end_time = st.date_input("End Date", value=date(2024, 12, 31))
 
-# Simulate "segments" from a database
-@st.cache_data
-def get_dummy_segments(start_time, end_time):
-    all_segments = ["Retail", "Petcare", "Banking", "Insurance", "Unknown", "API User"]
-    return [seg for seg in all_segments if seg.lower() not in ("api user", "unknown")]
+@st.cache_data(show_spinner=False) # Optimized
+def get_earliest_date():
+    """
+    Returns the earliest date from the 'start_time' column in the database.
+    """
+    engine = create_engine("postgresql+psycopg2://mars_user:max$studio89@llm-gateway-demo.postgres.database.azure.com:5432/studio_db")
+    query = "SELECT MIN(start_time) AS earliest_date FROM public.llm_usage;"
+    df = pd.read_sql(query, engine)
+    engine.dispose()
+    return df["earliest_date"].iloc[0]
+
+earliest_date = get_earliest_date()
+primary_key = "userPrincipalName"
 
 # Button to fetch segments
 if st.button("Fetch Segments"):
