@@ -48,7 +48,7 @@ def get_unique_segments(start_time, end_time):
     """
     Returns a list of distinct segments in the selected time frame.
     """
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine("postgresql://myuser:mypassword@localhost:5432/mydatabase")
     query = """
     SELECT DISTINCT INITCAP(LOWER(TRIM(user_id->>'segment'))) AS segment
     FROM public.llm_usage
