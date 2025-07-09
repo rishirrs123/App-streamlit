@@ -16,10 +16,6 @@ load_dotenv()
 
 # Get the database URL
 DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL is None:
-    raise ValueError("DATABASE_URL not found. Make sure you have a .env file with DATABASE_URL set.")
-
 print("Loaded DATABASE_URL:", DATABASE_URL)
 
 
