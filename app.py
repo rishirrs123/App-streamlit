@@ -1,5 +1,45 @@
+from sqlalchemy import create_engine
+import pandas as pd
+from dotenv import load_dotenv
+import os
 import streamlit as st
-from datetime import date
+from datetime import timedelta
+
+
+from dotenv import load_dotenv
+import os
+
+# Load the .env file
+load_dotenv()
+
+# Get the database URL
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL is None:
+    raise ValueError("DATABASE_URL not found. Make sure you have a .env file with DATABASE_URL set.")
+
+print("Loaded DATABASE_URL:", DATABASE_URL)
+
+
+# Load environment variables from the .env file
+load_dotenv()
+DATABASE_URL = os.getenv("postgresql://myuser:mypassword@localhost:5432/mydatabase")
+ENV = os.getenv("ENV", "dev")
+
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load .env file
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL not set. Check your .env file!")
+
+print("DATABASE_URL loaded successfully.")
+
+
 
 @st.cache_data(show_spinner=False) # Optimized
 def get_unique_segments(start_time, end_time):
