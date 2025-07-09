@@ -1,3 +1,4 @@
+python -m ensurepip --upgrade
 pip install python-dotenv
 pip install streamlit
 
