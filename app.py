@@ -50,3 +50,8 @@ def get_earliest_date():
     engine.dispose()
     return df["earliest_date"].iloc[0]
 
+if st.button("Fetch Segments"):
+    segments = get_unique_segments(start_time, end_time)
+    st.success(f"Found {len(segments)} segments:")
+    st.write(segments)
+
