@@ -1,3 +1,6 @@
+pip install python-dotenv
+pip install streamlit
+
 from sqlalchemy import create_engine
 import pandas as pd
 from dotenv import load_dotenv
