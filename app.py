@@ -1,20 +1,6 @@
 import streamlit as st
 from datetime import date
 
-# Dummy function: replace this with your actual logic
-def get_unique_segments(start_date, end_date):
-    return [{"Segment": "A", "Start": start_date, "End": end_date}]
-
-st.title("Segment Fetcher")
-
-start_date = st.date_input("Start Date", date.today())
-end_date = st.date_input("End Date", date.today())
-
-if st.button("Fetch Segments"):
-    segments = get_unique_segments(start_date, end_date)
-    st.write("Segments found:")
-    st.dataframe(segments)
-
 @st.cache_data(show_spinner=False) # Optimized
 def get_unique_segments(start_time, end_time):
     """
@@ -39,3 +25,17 @@ def get_unique_segments(start_time, end_time):
         else:
             updated_segments.append(seg)
     return sorted(set(updated_segments))
+
+@st.cache_data(show_spinner=False) # Optimized
+def get_earliest_date():
+    """
+    Returns the earliest date from the 'start_time' column in the database.
+    """
+    engine = create_engine(DATABASE_URL)
+    query = "SELECT MIN(start_time) AS earliest_date FROM public.llm_usage;"
+    df = pd.read_sql(query, engine)
+    engine.dispose()
+    return df["earliest_date"].iloc[0]
+
+earliest_date = get_earliest_date()
+primary_key = "userPrincipalName"
