@@ -50,9 +50,6 @@ def get_earliest_date():
     engine.dispose()
     return df["earliest_date"].iloc[0]
 
-earliest_date = get_earliest_date()
-primary_key = "userPrincipalName"
-
 # Button to fetch segments
 if st.button("Fetch Segments"):
     segments = get_dummy_segments(start_time, end_time)
