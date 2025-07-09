@@ -50,6 +50,32 @@ def get_earliest_date():
     engine.dispose()
     return df["earliest_date"].iloc[0]
 
+
+@st.cache_data(show_spinner=False) # Optimized
+def get_unique_segments(start_time, end_time):
+    """
+    Returns a list of distinct segments in the selected time frame.
+    """
+    engine = create_engine("postgresql+psycopg2://mars_user:max$studio89@llm-gateway-demo.postgres.database.azure.com:5432/studio_db")
+    query = """
+    SELECT DISTINCT INITCAP(LOWER(TRIM(user_id->>'segment'))) AS segment
+    FROM public.llm_usage
+    WHERE start_time BETWEEN %s AND %s
+      AND TRIM(user_id->>'segment') IS NOT NULL
+      AND TRIM(user_id->>'segment') <> ''
+      AND LOWER(TRIM(user_id->>'segment')) NOT IN ('api user', 'unknown')
+    ORDER BY segment;
+    """
+    segments = pd.read_sql(query, engine, params=(start_time, end_time))["segment"].dropna().tolist()
+    engine.dispose()
+    updated_segments = []
+    for seg in segments:
+        if "anicura" in seg.lower():
+            updated_segments.append("Petcare")
+        else:
+            updated_segments.append(seg)
+    return sorted(set(updated_segments))
+
 if st.button("Fetch Segments"):
     try:
         segments = get_unique_segments(start_time, end_time)
