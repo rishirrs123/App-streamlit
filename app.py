@@ -50,6 +50,6 @@ def get_earliest_date():
     engine.dispose()
     return df["earliest_date"].iloc[0]
 
-if st.button("Fetch Segments"):
+st.button("Fetch Segments")
 
 
