@@ -35,39 +35,18 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 print("DATABASE_URL loaded successfully.")
 
 
-# Date inputs
+# UI: Date input
 start_time = st.date_input("Start Date", value=date(2024, 1, 1))
 end_time = st.date_input("End Date", value=date(2024, 12, 31))
 
-# Function to get data
-@st.cache_data(show_spinner=False)
-def get_unique_segments(start_time, end_time):
-    engine = create_engine("postgresql://myuser:mypassword@your-host:5432/mydatabase")
-    query = """
-    SELECT DISTINCT INITCAP(LOWER(TRIM(user_id->>'segment'))) AS segment
-    FROM public.llm_usage
-    WHERE start_time BETWEEN %s AND %s
-      AND TRIM(user_id->>'segment') IS NOT NULL
-      AND TRIM(user_id->>'segment') <> ''
-      AND LOWER(TRIM(user_id->>'segment')) NOT IN ('api user', 'unknown')
-    ORDER BY segment;
-    """
-    segments = pd.read_sql(query, engine, params=(start_time, end_time))["segment"].dropna().tolist()
-    engine.dispose()
+# Simulate "segments" from a database
+@st.cache_data
+def get_dummy_segments(start_time, end_time):
+    all_segments = ["Retail", "Petcare", "Banking", "Insurance", "Unknown", "API User"]
+    return [seg for seg in all_segments if seg.lower() not in ("api user", "unknown")]
 
-    updated_segments = []
-    for seg in segments:
-        if "anicura" in seg.lower():
-            updated_segments.append("Petcare")
-        else:
-            updated_segments.append(seg)
-    return sorted(set(updated_segments))
-
-# Button to trigger data fetch
+# Button to fetch segments
 if st.button("Fetch Segments"):
-    try:
-        segments = get_unique_segments(start_time, end_time)
-        st.success(f"Found {len(segments)} segments")
-        st.write(segments)
-    except Exception as e:
-        st.error(f"Error: {e}")
+    segments = get_dummy_segments(start_time, end_time)
+    st.success(f"Found {len(segments)} segments")
+    st.write(segments)
